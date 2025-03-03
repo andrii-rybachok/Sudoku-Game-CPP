@@ -2,7 +2,7 @@
 #include <iostream>
 #include <regex>
 #include <sstream>
-
+#include "solver.hpp"
 #include "game.hpp"
 
 using namespace std;
@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     int seed=1; //random seed
     int gamesize = 9; // default size of game
     int nobs = 10; // default number of prefilled spaces
-
+    string method = "backtrace";
     // Handle command line args
     for (int i = 1; i < argc; ++i) {
         if ((std::string(argv[i]) == "--seed") ||
@@ -59,7 +59,10 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
         }
-
+        if ((std::string(argv[i]) == "--RP") ||
+            (std::string(argv[i]) == "-rp")) {
+            method = "RP";
+        }
 
 
        

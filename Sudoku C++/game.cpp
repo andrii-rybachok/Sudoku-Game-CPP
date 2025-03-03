@@ -4,7 +4,7 @@
 #include <regex>
 #include <sstream>
 #include "game.hpp"
-
+#include "solver.hpp"
 #include "altproj.hpp"
 using namespace std;
 
@@ -31,7 +31,7 @@ void playAgainPrompt(int size, int nobs) {
 void playGame(int size, int nobs) {
 
     string user_entry;
-
+    bool solverSucces = false;
     Board board = generatePuzzle(size, nobs);
     regex rgx("[0-9]{1,}"); // For parsing user input
     smatch match;
@@ -46,6 +46,11 @@ void playGame(int size, int nobs) {
         getline(cin, user_entry); // get user input
 
 
+        if (user_entry == "Solve" || user_entry == "solve") {
+            solverSucces = solve(board, 0, 0);
+            board.printPuzzle();
+            break;
+        }
         
 
         if (user_entry == "Clear" || user_entry == "clear") {
@@ -104,7 +109,31 @@ void playGame(int size, int nobs) {
 
     string user_response;
 
-    
+    if (solverSucces) {
+
+        cout << "The puzzle is solved!" << endl;
+        playAgainPrompt(size, nobs);
+
+    }
+    else {
+
+        cout << "Could not solve puzzle based on pre-filled values" << endl;
+
+        do {
+
+            cout << "Would you like to clear and try to solve? y/n" << endl;
+            getline(cin, user_response);
+
+        } while ((user_response != "y") && (user_response != "n"));
+
+        if (user_response == "y") {
+            board.clearPuzzle();
+            solve(board, 0, 0);
+            board.printPuzzle();
+            playAgainPrompt(size, nobs);
+        }
+
+    }
 
 
 }
