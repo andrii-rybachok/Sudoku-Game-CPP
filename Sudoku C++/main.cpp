@@ -4,7 +4,7 @@
 #include <sstream>
 #include "solver.hpp"
 #include "game.hpp"
-
+#include "tests.hpp"
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -12,6 +12,8 @@ int main(int argc, char* argv[]) {
     int seed=1; //random seed
     int gamesize = 9; // default size of game
     int nobs = 10; // default number of prefilled spaces
+    int sim = 0; // number of simulation runs (if running speed tests)
+    bool verbose = false; // print each simulation result for speed tests
     string method = "backtrace";
     // Handle command line args
     for (int i = 1; i < argc; ++i) {
@@ -44,7 +46,24 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
         }
+        if ((std::string(argv[i]) == "--Unittest") ||
+            (std::string(argv[i]) == "-u")) {
 
+            if (i + 1 < argc) {
+                istringstream ss(argv[++i]);
+                if (!(ss >> sim))
+                    cerr << "Invalid number " << argv[i++] << endl;
+            }
+            else {
+                std::cerr << "--Unittest option requires one argument."
+                    << std::endl;
+                return 1;
+            }
+        }
+        if ((std::string(argv[i]) == "--Verbose") ||
+            (std::string(argv[i]) == "-v")) {
+            verbose = true;
+        }
         if ((std::string(argv[i]) == "--nobs") ||
             (std::string(argv[i]) == "-n")) {
 
@@ -75,9 +94,12 @@ int main(int argc, char* argv[]) {
     cout << "---------------- Have  fun! ---------------" << endl;
     cout << "-------------------------------------------" << endl;
 
-
-    playGame(gamesize, nobs);
-
+    if (sim == 0) {
+        playGame(gamesize, nobs);
+    }
+    else {
+        unitTest(gamesize, nobs, sim, verbose);
+    }
 
     return 0;
 }
