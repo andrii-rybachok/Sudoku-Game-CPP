@@ -5,24 +5,21 @@
 #include "solver.hpp"
 #include "game.hpp"
 #include "tests.hpp"
+#include "main.hpp"
 using namespace std;
 
 int main(int argc, char* argv[]) {
 
-    int seed=1; //random seed
-    int gamesize = 9; // default size of game
-    int nobs = 10; // default number of prefilled spaces
-    int sim = 0; // number of simulation runs (if running speed tests)
-    bool verbose = false; // print each simulation result for speed tests
-    string method = "backtrace";
-    // Handle command line args
+    MainArgs mainArgs;
+
+   
     for (int i = 1; i < argc; ++i) {
         if ((std::string(argv[i]) == "--seed") ||
             (std::string(argv[i]) == "-s")) {
 
             if (i + 1 < argc) {
                 istringstream ss(argv[++i]);
-                if (!(ss >> seed))
+                if (!(ss >> mainArgs.seed))
                     cerr << "Invalid number " << argv[i++] << endl;
             }
             else {
@@ -37,7 +34,7 @@ int main(int argc, char* argv[]) {
 
             if (i + 1 < argc) {
                 istringstream ss(argv[++i]);
-                if (!(ss >> gamesize))
+                if (!(ss >> mainArgs.gamesize))
                     cerr << "Invalid number " << argv[i++] << endl;
             }
             else {
@@ -51,7 +48,7 @@ int main(int argc, char* argv[]) {
 
             if (i + 1 < argc) {
                 istringstream ss(argv[++i]);
-                if (!(ss >> sim))
+                if (!(ss >> mainArgs.sim))
                     cerr << "Invalid number " << argv[i++] << endl;
             }
             else {
@@ -62,14 +59,14 @@ int main(int argc, char* argv[]) {
         }
         if ((std::string(argv[i]) == "--Verbose") ||
             (std::string(argv[i]) == "-v")) {
-            verbose = true;
+            mainArgs.verbose = true;
         }
         if ((std::string(argv[i]) == "--nobs") ||
             (std::string(argv[i]) == "-n")) {
 
             if (i + 1 < argc) {
                 istringstream ss(argv[++i]);
-                if (!(ss >> nobs))
+                if (!(ss >> mainArgs.nobs))
                     cerr << "Invalid number " << argv[i++] << endl;
             }
             else {
@@ -80,25 +77,25 @@ int main(int argc, char* argv[]) {
         }
         if ((std::string(argv[i]) == "--RP") ||
             (std::string(argv[i]) == "-rp")) {
-            method = "RP";
+            mainArgs.method = "RP";
         }
 
 
        
     }
 
-    srand(seed); // set random seed
+    srand(mainArgs.seed); 
 
-    // Welcome message
+
     cout << "-------------------------------------------" << endl;
     cout << "---------------- Have  fun! ---------------" << endl;
     cout << "-------------------------------------------" << endl;
 
-    if (sim == 0) {
-        playGame(gamesize, nobs);
+    if (mainArgs.sim == 0) {
+        playGame(mainArgs.gamesize, mainArgs.nobs);
     }
     else {
-        unitTest(gamesize, nobs, sim, verbose);
+        unitTest(mainArgs.gamesize, mainArgs.nobs, mainArgs.sim, mainArgs.verbose);
     }
 
     return 0;

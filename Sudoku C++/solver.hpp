@@ -73,7 +73,7 @@ public:
     void clearPuzzle(); //Clear mutables from puzzle
     bool inBounds(int val); //Check if value can exist in puzzle
     bool feasibleUser(int row, int col, int val);
-
+    void resetInfeasible();
     //Operator overload to assign value to cell
     int& operator() (int x, int y) {
         assert(x < N && y < N);

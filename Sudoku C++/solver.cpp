@@ -100,8 +100,7 @@ void Board::clearPuzzle() {
 }
 
 
-//Check if value is within size range of puzzle
-//i.e. 1-9 on a 9x9 puzzle
+//Checks if is in good range
 bool Board::inBounds(int val) {
     if ((val > 0) && (val <= N)) {
         return true;
@@ -112,62 +111,53 @@ bool Board::inBounds(int val) {
 }
 
 
+void Board::resetInfeasible() {
+    // Assuming N is the size of the board
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            infeasible[i][j] = false;  // Set each element to false
+        }
+    }
+}
 //Checks for feasibility of the board
-//Not useful to solvers because can't return as soon as problem exits
-//Needs to cycle through whole board to update problem cells
-//so that we can return red to the user....
 bool Board::feasibleUser(int row, int col, int val) {
 
     int blockSize = (int)sqrt(N);
-
-    if (row >= N) {
-        std::cout << "You can't play off the game board!" << endl;
+    if (!inBounds(row+1)||!inBounds(col+1)) {
         return false;
     }
 
-    if (col >= N) {
-        std::cout << "You can't play off the game board!" << endl;
-        return false;
-    }
 
-    bool isfeasible = true;
-
+    resetInfeasible();
+    // Check if value already exists in the row
     for (int i = 0; i < N; i++) {
         if ((*this)(row, i) == val) {
             infeasible[row][i] = true;
-            isfeasible = false;
-        }
-        else {
-            infeasible[row][i] = false;
+            return false;  // Value already in the same row
         }
     }
 
+    // Check if value already exists in the column
     for (int i = 0; i < N; i++) {
         if ((*this)(i, col) == val) {
-            infeasible[i][col] = true;
-            isfeasible = false;
-        }
-        else {
-            infeasible[i][col] = false;
+            infeasible[col][i] = true;
+            return false;  // Value already in the same column
         }
     }
 
-    int blockRow = blockSize * (row / blockSize);
-    int blockCol = blockSize * (col / blockSize);
+    // Check if value already exists in the 3x3 block
+    int blockRowStart = (row / blockSize) * blockSize;
+    int blockColStart = (col / blockSize) * blockSize;
 
-    // // See if used yet in block
-    for (int i = 0; i < blockSize; i++) {
-        for (int j = 0; j < blockSize; j++) {
-            if ((*this)(blockRow + i, blockCol + j) == val) {
-                infeasible[blockRow + i][blockCol + j] = true;
-                isfeasible = false;
-            }
-            else {
-                infeasible[blockRow + i][blockCol + j] = false;
+    for (int i = blockRowStart; i < blockRowStart + blockSize; i++) {
+        for (int j = blockColStart; j < blockColStart + blockSize; j++) {
+            if ((*this)(i, j) == val) {
+                infeasible[i][j] = true;
+                return false;  // Value already in the same 3x3 block
             }
         }
     }
-    return isfeasible;
+    return true;
 }
 
 // Helper function for solve: checks to see if candidate is feasible or not
