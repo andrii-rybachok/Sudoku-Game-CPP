@@ -4,7 +4,6 @@
 #include <regex>
 #include <sstream>
 #include "solver.hpp"
-#include "altproj.hpp"
 #include "game.hpp"
 #include <ctime>
 #include <ratio>

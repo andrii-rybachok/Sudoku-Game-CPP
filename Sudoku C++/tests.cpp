@@ -1,4 +1,4 @@
-#include "altproj.hpp"
+
 #include "game.hpp"
 #include "tests.hpp"
 #include <ctime>
@@ -19,17 +19,17 @@ void unitTest(int size, int nobs, int ntimes, bool verbose) {
 
         auto t = measure<nanoseconds>::execution(solve,
             board, 0, 0);
-        auto t2 = measure<nanoseconds>::execution(DR, board);
+        auto t2 = measure<nanoseconds>::execution(solveEucharistic, board);
 
         if (verbose)
             cout << "Backtrace solved in " << t << " ns." << \
-            " Random projections solved in " << t2 << " ns." << endl;
+            " Candidate Reduction strategy solved in " << t2 << " ns." << endl;
 
         total += t;
         total2 += t2;
     }
 
-    cout << "Average time for Backtrace: " << total / ntimes << endl;
-    cout << "Average time for Random projections: " << total2 / ntimes << endl;
+    cout << "\n Average time for Backtrace: " << total / ntimes <<" ns" << endl;
+    cout << "Average time for Candidate Reduction strategy: " << total2 / ntimes <<" ns" << endl;
 
 }

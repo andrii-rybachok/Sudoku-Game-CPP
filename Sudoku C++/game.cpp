@@ -1,11 +1,9 @@
 
-
 #include <iostream>
 #include <regex>
 #include <sstream>
 #include "game.hpp"
 #include "solver.hpp"
-#include "altproj.hpp"
 using namespace std;
 
 void playGame(int size, int nobs);
@@ -37,12 +35,13 @@ void playGame(int size, int nobs) {
     smatch match;
 
     unique_ptr<UserInput> input= make_unique<UserInput>();
-
     // Repeat until puzzle is solved
     do {
 
 
         board.printPuzzle(); // print puzzle
+        cout << "\nEnter column, row and the value:";
+
         getline(cin, user_entry); // get user input
 
 
@@ -123,7 +122,7 @@ void playGame(int size, int nobs) {
 
         if (user_response == "y") {
             board.clearPuzzle();
-            solve(board, 0, 0);
+            solveEucharistic(board);
             board.printPuzzle();
             playAgainPrompt(size, nobs);
         }

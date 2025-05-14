@@ -188,9 +188,41 @@ bool feasible(Board& board, int row, int col, int val) {
     return true;
 }
 
-// Backtracking algorithm
-// An outline of the algorithm was found on the following website 
-// (implementation is my own): http://moritz.faui2k3.org/en/yasss
+bool solveEucharisticRec(Board& board,int row, int col) {
+
+    int n = board.getSize();
+    assert(n == pow(sqrt(n), 2));
+
+    if (row == n - 1 && col== n)
+        return true;
+    if (col == n) {
+        row++;
+        col = 0;
+    }
+    if (board(row, col) != 0) {
+        return solveEucharisticRec(board, row, col + 1);
+    }
+
+    for (int num = 1; num <= n; n++) {
+        if (board.isSafe(row, col, num)) {
+            board.assignValue(row, col, num);
+            board.setNumberCache(row, col, num, true);
+
+            if (solveEucharisticRec(board, row, col + 1)) {
+                return true;
+            }
+
+            board.setNumberCache(row, col, num, false);
+        }
+    }
+    return false;
+}
+
+bool solveEucharistic(Board& board) {
+    board.resetNumberCache();
+    return solveEucharisticRec(board,0,0);
+}
+
 bool solve(Board& board, int row, int col) {
     // N: size of the board; note N must be a perfect square!
     int N = board.getSize();
@@ -229,8 +261,8 @@ bool solve(Board& board, int row, int col) {
     return false;
 }
 
-// Generate board to solve (only generates N! possible boards, could easily
-// be extended to get more, but this is simple enough for now)
+
+
 Board generatePuzzle(int N, int nobs) {
     // generate permutation of 1...n
     // fill diagonal of board with this permutation
@@ -265,8 +297,7 @@ Board generatePuzzle(int N, int nobs) {
 
 }
 
-// http://www.cs.berkeley.edu/~jfc/cs174/lecs/lec2/lec2.pdf
-// function to return a random permutation of integers 0,..,(N-1)
+
 int* genPerm(int N) {
 
     // initialize array [1,...,N]

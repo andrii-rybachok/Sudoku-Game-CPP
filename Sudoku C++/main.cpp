@@ -75,10 +75,6 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
         }
-        if ((std::string(argv[i]) == "--RP") ||
-            (std::string(argv[i]) == "-rp")) {
-            mainArgs.method = "RP";
-        }
 
 
        

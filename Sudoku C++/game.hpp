@@ -4,7 +4,7 @@
 #include <regex>
 #include <sstream>
 #include "solver.hpp"
-#include "altproj.hpp"
+//#include "altproj.hpp"
 
 
 struct UserInput {
